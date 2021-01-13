@@ -83,7 +83,12 @@ export class Renderer {
         var mouse = _this.getMouse(e);
         _this.addObject(new Shape(mouse.x - 10, mouse.y - 10, 20, 20, 'rgba(0,255,0,.6)'));
       }, true);
-      setInterval(function() { _this.draw(); }, this.redrawInterval);
+      this.redraw();
+    }
+
+    redraw () {
+        this.draw();
+        requestAnimationFrame(() => { this.redraw() });
     }
   
     draw () {
