@@ -12,6 +12,8 @@ export class Renderer {
   
     private selection: Object | null;
   
+    private showControls: boolean;
+  
     private selectionColor: string;
   
     private selectionWidth: number;
@@ -29,6 +31,7 @@ export class Renderer {
       this.valid = false; // when set to false, the canvas will redraw everything
       this.objects = [];  // the collection of things to be drawn
       this.selection = null;
+      this.showControls = true;
       this.selectionColor = '#CC0000';
       this.selectionWidth = 2;  
       this.redrawInterval = 30;
@@ -119,7 +122,7 @@ export class Renderer {
     }
   
     maybeDrawSelection () {
-      if (this.selection) {
+      if (this.selection && this.showControls) {
         this.ctx.strokeStyle = this.selectionColor;
         this.ctx.lineWidth = this.selectionWidth;
         var mySel = this.selection;
@@ -155,5 +158,28 @@ export class Renderer {
       
       // We return a simple javascript object (a hash) with x and y defined
       return {x: mx, y: my};
+    }
+
+    toDataURI (fileType?: string) {
+        // Hide the controls (if any)
+        const originalShowControls = this.showControls;
+        this.showControls = false;
+        this.valid = false;
+        this.draw();
+        // Generate the image
+        const dataUri = this.canvas.toDataURL(fileType);
+        // Show the controls again (if any)
+        this.showControls = originalShowControls;
+        this.valid = false;
+        this.draw();
+        // Return the image
+        return dataUri;
+    }
+
+    download (filename = 'filename.png', fileType = 'image/png') {
+        const link = document.createElement('a');
+        link.download = filename;
+        link.href = this.toDataURI(fileType);
+        link.click();
     }
   }

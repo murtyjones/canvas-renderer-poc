@@ -23,13 +23,14 @@ function App() {
     );
     renderer.addObject(rect);
     const img = document.createElement('img');
-    img.src = 'https://upload.wikimedia.org/wikipedia/en/0/00/The_Child_aka_Baby_Yoda_%28Star_Wars%29.jpg';
+    img.crossOrigin = 'anonymous';
+    img.src = 'https://upload.wikimedia.org/wikipedia/commons/4/4e/Pleiades_large.jpg';
     const image = new Image(
       img,
       50,
       50,
-      100,
-      100
+      img.naturalWidth,
+      img.naturalHeight
     );
     renderer.addObject(image);
   }, [canvasEl])
@@ -48,6 +49,9 @@ function App() {
       <canvas id="my-canvas" ref={canvasEl} width="400" height="300">
         This text is displayed if your browser does not support HTML5 Canvas.
       </canvas>
+      <button onClick={() => { r.current!.download() }}>
+        Download image
+      </button>
       <button onClick={toggleShapeColors}>
         Toggle all shape colors
       </button>
